@@ -1,0 +1,17 @@
+Step 1: Build with Docker
+  docker build . -t heartbeat
+
+Step 2: Run with Docker (mount the container's logs folder to your machine)
+  docker run --rm -it -v `pwd`/logs:/usr/src/heartbeat/logs heartbeat
+
+  On Windows:
+  docker run --rm -it -v C:/path/to/folder/logs:/usr/src/heartbeat/logs heartbeat
+
+Step 3: See heartbeat failures
+    error.log should show Heartbeat failed!
+
+
+Cleanup:
+    Press control-C to kill the process
+
+    docker rmi heartbeat to clean up the image
