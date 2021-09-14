@@ -1,3 +1,7 @@
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 
@@ -17,16 +21,40 @@ class GPSLocation extends Thread {
     public void run() {
         //String array to hold coordinates. Limited to 30 entries to simulate limited memory
         String[] coordinatesHistory = new String[30];
+        final String USER_AGENT = "Mozilla/5.0";
+        final String GET_URL = "https://ipwhois.app/json/129.21.145.232";
 
         while(true){
             System.out.println("Fetching Car's Coordinates");
 
             try{
-                URL url = new URL("https://ipwhois.app/json/129.21.145.232");
-            } catch(MalformedURLException e){
+                URL url = new URL(GET_URL);
+                HttpURLConnection con = (HttpURLConnection) url.openConnection();
+                con.setRequestMethod("GET");
+                con.setRequestProperty("User-Agent", USER_AGENT);
+                int responseCode = con.getResponseCode();
+                System.out.println("GET Response Code :: " + responseCode);
+                if (responseCode == HttpURLConnection.HTTP_OK) { // success
+                    BufferedReader in = new BufferedReader(new InputStreamReader(
+                            con.getInputStream()));
+                    String inputLine;
+                    StringBuffer response = new StringBuffer();
+
+                    while ((inputLine = in.readLine()) != null) {
+                        response.append(inputLine);
+                    }
+                    in.close();
+
+                    // print result
+                    System.out.println(response.toString());
+                } else {
+                    System.out.println("GET request not worked");
+                }
+            } catch(MalformedURLException e) {
+                System.out.println(e);
+            } catch(IOException e) {
                 System.out.println(e);
             }
-
 
 
             try {
