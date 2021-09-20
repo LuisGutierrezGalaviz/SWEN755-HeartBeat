@@ -1,30 +1,20 @@
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Random;
-
-import com.sun.net.httpserver.HttpServer;
-import com.sun.net.httpserver.HttpHandler;
-import com.sun.net.httpserver.HttpExchange;
-import java.net.InetSocketAddress;
 import java.io.OutputStream;
+import java.net.InetSocketAddress;
+import java.util.HashSet;
+
+import com.sun.net.httpserver.HttpExchange;
+import com.sun.net.httpserver.HttpHandler;
+import com.sun.net.httpserver.HttpServer;
 
 public class Monitor {
     public static int activeApplication = 7;
     public static String lastBody = "";
-    // TODO make a HashSet<Integer>
-    public HashMap<Integer, Boolean> active = new HashMap<>();
+    public HashSet<Integer> active = new HashSet<>();
 
     public Integer getActiveApplication() {
-        for (Map.Entry<Integer, Boolean> entry : active.entrySet()) {
-            if (entry.getValue()) {
-                return entry.getKey();
-            }
+        for (Integer entry : active) {
+            return entry;
         }
         return null;
     }
@@ -45,7 +35,7 @@ public class Monitor {
                 while (true) {
                     Thread.sleep(1100);
                     System.out.println("Coordinates: " + lastBody);
-                    if (active.containsKey(activeApplication) && active.get(activeApplication)) {
+                    if (active.contains(activeApplication)) {
                         // OK
                         System.out.println("Active application " + activeApplication + " is alive");
                     } else {
@@ -103,7 +93,7 @@ public class Monitor {
             if (activeApplication == appNumber) {
                 lastBody = body;
             }
-            active.put(appNumber, true);
+            active.add(appNumber);
         }
     }
 }
